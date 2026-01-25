@@ -1,0 +1,233 @@
+openapi: 3.0.1
+
+info:
+  title: Hospital Management System API
+  description: Complete Hospital Backend APIs
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+
+tags:
+  - name: User
+  - name: Staff
+  - name: Doctor
+  - name: Appointment
+  - name: Prescription
+  - name: Billing
+  - name: Medicine
+
+paths:
+
+  # ================= USER =================
+
+  /user/register:
+    post:
+      tags: [User]
+      summary: Register User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegister'
+      responses:
+        "200":
+          description: User registered
+
+  /user/login:
+    post:
+      tags: [User]
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        "200":
+          description: Login success
+
+  # ================= APPOINTMENT =================
+
+  /appointment/book:
+    post:
+      tags: [Appointment]
+      summary: Book Appointment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppointmentRequest'
+      responses:
+        "200":
+          description: Appointment booked
+
+  /appointment/confirm:
+    post:
+      tags: [Appointment]
+      summary: Confirm Appointment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppointmentConfirmRequest'
+      responses:
+        "200":
+          description: Appointment confirmed
+
+  # ================= PRESCRIPTION =================
+
+  /prescription/create/{doctorId}:
+    post:
+      tags: [Prescription]
+      summary: Create Prescription
+      parameters:
+        - name: doctorId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PrescriptionCreateRequest'
+      responses:
+        "200":
+          description: Prescription created
+
+  /prescription/complete:
+    post:
+      tags: [Prescription]
+      summary: Complete Prescription
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PrescriptionActionRequest'
+      responses:
+        "200":
+          description: Completed
+
+  # ================= BILLING =================
+
+  /bill/staff/create:
+    post:
+      tags: [Billing]
+      summary: Create Bill
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBillRequest'
+      responses:
+        "200":
+          description: Bill created
+
+  /bill/payment:
+    post:
+      tags: [Billing]
+      summary: Make Payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MakePaymentRequest'
+      responses:
+        "200":
+          description: Payment done
+
+  /bill/{billId}:
+    get:
+      tags: [Billing]
+      summary: Get Bill
+      parameters:
+        - name: billId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Bill details
+
+# ================= COMPONENTS =================
+
+components:
+  schemas:
+
+    UserRegister:
+      type: object
+      properties:
+        username: { type: string }
+        password: { type: string }
+        email: { type: string }
+
+    LoginRequest:
+      type: object
+      properties:
+        username: { type: string }
+        password: { type: string }
+
+    AppointmentRequest:
+      type: object
+      properties:
+        appointmentDate: { type: string }
+        startTime: { type: string }
+        endTime: { type: string }
+        reason: { type: string }
+
+    AppointmentConfirmRequest:
+      type: object
+      properties:
+        appointmentId: { type: integer }
+        doctorId: { type: integer }
+
+    PrescriptionCreateRequest:
+      type: object
+      properties:
+        appointmentId: { type: integer }
+        medicines:
+          type: array
+          items:
+            $ref: '#/components/schemas/MedicineRequest'
+
+    MedicineRequest:
+      type: object
+      properties:
+        medicineCode: { type: string }
+        quantity: { type: integer }
+        dosage: { type: string }
+        frequency: { type: string }
+        duration: { type: string }
+
+    PrescriptionActionRequest:
+      type: object
+      properties:
+        appointmentId: { type: integer }
+        prescriptionId: { type: integer }
+
+    CreateBillRequest:
+      type: object
+      properties:
+        appointmentId: { type: integer }
+        prescriptionId: { type: integer }
+        paymentMode:
+          type: string
+          enum: [CASH, CARD, UPI]
+
+    MakePaymentRequest:
+      type: object
+      properties:
+        billingId: { type: integer }
+        paymentMode:
+          type: string
+          enum: [CASH, CARD, UPI]
