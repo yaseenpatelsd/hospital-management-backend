@@ -157,7 +157,6 @@ to secured endpoints.
 <ul>
   <li>@NotNull</li>
   <li>@NotBlank</li>
-  <li>@Email</li>
   <li>@Size</li>
 </ul>
 
