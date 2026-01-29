@@ -64,6 +64,8 @@ public class UserConfi {
                         .requestMatchers("/patient/**").hasRole("PATIENT")
                         .requestMatchers("/doctor/**").hasRole("DOCTOR")
                         .requestMatchers("/staff/**").hasRole("STAFF")
+                                       .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
 
                         .anyRequest().authenticated()
                 )
@@ -82,3 +84,4 @@ public class UserConfi {
         return authenticationConfiguration.getAuthenticationManager();
     }
 }
+
