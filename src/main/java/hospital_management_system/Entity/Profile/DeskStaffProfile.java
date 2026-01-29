@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Table(name = "desk_staff_profile")
 public class DeskStaffProfile {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
     private String fullName;
@@ -48,3 +48,4 @@ public class DeskStaffProfile {
     private Boolean isActive=true;
 
 }
+
