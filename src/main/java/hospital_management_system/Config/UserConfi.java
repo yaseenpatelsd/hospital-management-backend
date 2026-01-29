@@ -21,69 +21,67 @@ import org.springframework.http.HttpMethod;
 @EnableWebSecurity
 public class UserConfi {
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception{
-        http
-                .csrf(csrf->csrf.disable())
-                .authorizeHttpRequests(auth->auth
-                        .requestMatchers(
+@Bean
+public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception {
 
-                           //Patiemt register flow
-                   "/patient/register",
-                            "/patient/account/verification",
-                            "/patient/otp/request/for/account/verification",
-                            "/patient/login",
-                            "/patient/request/otp",
-                            "/patient/password/reset",
+    http
+        .csrf(csrf -> csrf.disable())
+        .sessionManagement(session ->
+            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        )
+        .authorizeHttpRequests(auth -> auth
 
+            // ✅ Always allow OPTIONS first
+            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                           "/doctor/register",
-                            "/doctor/account/verification",
-                            "/doctor/login",
-                            "/doctor/request/otp",
-                            "/doctor/password/reset",
+            // ✅ Swagger
+            .requestMatchers(
+                "/swagger-ui/**",
+                "/swagger-ui.html",
+                "/v3/api-docs/**",
+                "/swagger-resources/**",
+                "/webjars/**"
+            ).permitAll()
 
-                                "/staff/register",
-                            "/staff/account/verification",
-                            "/staff/login",
-                            "/staff/request/otp",
-                            "/staff/password/reset",
+            // ✅ PUBLIC AUTH / REGISTER endpoints
+            .requestMatchers(
+                "/patient/register",
+                "/patient/account/verification",
+                "/patient/otp/request/for/account/verification",
+                "/patient/login",
+                "/patient/request/otp",
+                "/patient/password/reset",
 
+                "/doctor/register",
+                "/doctor/account/verification",
+                "/doctor/login",
+                "/doctor/request/otp",
+                "/doctor/password/reset",
 
-                                "/admin/register",
-                                "/admin/login",
+                "/staff/register",
+                "/staff/account/verification",
+                "/staff/login",
+                "/staff/request/otp",
+                "/staff/password/reset",
 
+                "/admin/register",
+                "/admin/login"
+            ).permitAll()
 
-                                "/doctor/findAll",
+            // 🔐 ROLE-BASED (put AFTER public endpoints)
+            .requestMatchers("/patient/**").hasRole("PATIENT")
+            .requestMatchers("/doctor/**").hasRole("DOCTOR")
+            .requestMatchers("/staff/**").hasRole("STAFF")
 
-                                "/swagger-ui/**",
-                                "/swagger-ui.html",
-                                "/v3/api-docs/**",
-                                "/swagger-resources/**",
-                                "/webjars/**"
-                ).permitAll()
-                        .requestMatchers("/patient/**").hasRole("PATIENT")
-                        .requestMatchers("/doctor/**").hasRole("DOCTOR")
-                        .requestMatchers("/staff/**").hasRole("STAFF")
-                                       .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+            // 🔒 Everything else
+            .anyRequest().authenticated()
+        )
+        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
-
-                        .anyRequest().authenticated()
-                )
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement(Session->Session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-        return http.build();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)throws Exception{
-        return authenticationConfiguration.getAuthenticationManager();
-    }
+    return http.build();
 }
+
+}
+
 
 
