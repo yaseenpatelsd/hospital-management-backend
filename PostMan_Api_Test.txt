@@ -1,0 +1,188 @@
+{
+  "info": {
+    "name": "Hospital Management System API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Complete Hospital Management API Collection"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ],
+  "item": [
+
+    {
+      "name": "User Auth",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/user/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"john\",\n  \"password\": \"Password@123\",\n  \"email\": \"john@gmail.com\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "Verify User OTP",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/user/account/verification",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@gmail.com\",\n  \"otp\": \"123456\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/user/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"john\",\n  \"password\": \"Password@123\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Staff Auth",
+      "item": [
+        {
+          "name": "Register Staff",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/staff/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"staff1\",\n  \"password\": \"Password@123\",\n  \"email\": \"staff@mail.com\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "Staff Login",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/staff/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"staff1\",\n  \"password\": \"Password@123\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Doctor Profile",
+      "item": [
+        {
+          "name": "Create Doctor Profile",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/doctor/profile",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Dr Mike\",\n  \"gender\": \"MALE\",\n  \"mobileNo\": \"9999999999\",\n  \"degree\": \"MBBS\",\n  \"specialization\": \"Dermatology\",\n  \"experience\": 5,\n  \"consultationFee\": 500\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Appointment",
+      "item": [
+        {
+          "name": "Book Appointment",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/appointment/book",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"appointmentDate\": \"2026-01-22\",\n  \"startTime\": \"10:00\",\n  \"endTime\": \"10:30\",\n  \"reason\": \"Skin checkup\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "Confirm Appointment",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/appointment/confirm",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"drId\": 1,\n  \"appointmentId\": 1\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Prescription",
+      "item": [
+        {
+          "name": "Create Prescription",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/prescription/create",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"appointmentId\": 1,\n  \"medicines\": [\n    {\n      \"medicineCode\": \"1\",\n      \"quantity\": 2,\n      \"dosage\": \"5mg\",\n      \"frequency\": \"2 TIMES A DAY\",\n      \"duration\": \"3 DAYS\"\n    }\n  ]\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Billing",
+      "item": [
+        {
+          "name": "Create Bill",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/bill/staff/create",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"appointmentId\": 1,\n  \"prescriptionId\": 1,\n  \"paymentMode\": \"CASH\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "Pay Bill",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/bill/payment",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"billingId\": 1,\n  \"paymentMode\": \"CASH\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        }
+      ]
+    }
+
+  ]
+}
