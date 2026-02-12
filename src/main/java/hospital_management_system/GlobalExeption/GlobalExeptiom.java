@@ -52,6 +52,26 @@ public class GlobalExeptiom {
     public ResponseEntity<GlobalResponseDto> handleError4(ResourceAlreadyAvailable sc, HttpServletRequest request){
         return build(HttpStatus.ALREADY_REPORTED,"Resource Already available", sc.getMessage(), request);
     }
+     @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<GlobalResponseDto> handleValidationException(
+            MethodArgumentNotValidException ex,
+            HttpServletRequest request
+    ) {
+
+        String message = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .findFirst()
+                .orElse("Validation error");
+
+        return build(
+                HttpStatus.BAD_REQUEST,
+                "Validation Failed",
+                message,
+                request
+        );
+    }
 
 
     public ResponseEntity<GlobalResponseDto> build(
@@ -71,3 +91,4 @@ public class GlobalExeptiom {
         return ResponseEntity.status(status).body(responseDto);
     }
 }
+
